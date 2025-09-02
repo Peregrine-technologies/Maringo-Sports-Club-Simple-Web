@@ -1,0 +1,6 @@
+mark {
+  background-color: #a3d2ca; /* crayon-like pastel color */
+  color: #000; /* black text for readability */
+  padding: 2px 4px;
+  border-radius: 3px;
+}

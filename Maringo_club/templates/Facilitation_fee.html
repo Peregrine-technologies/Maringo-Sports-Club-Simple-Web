@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Facilitation Fee Calculator (KES)</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f7f9;
+      padding: 20px;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    form {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 500px;
+    }
+
+    fieldset {
+      border: none;
+      padding: 0;
+    }
+
+    legend {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+
+    select, input[type="number"], input[type="text"] {
+      width: 100%;
+      padding: 10px 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #007bff;
+      border: none;
+      color: white;
+      font-size: 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .error {
+      color: red;
+      font-size: 0.9rem;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+
+    #feeDisplay {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #e7f3ff;
+      border-left: 4px solid #007bff;
+      border-radius: 6px;
+      color: #004085;
+      font-weight: 600;
+      display: none;
+    }
+
+    #printBtn {
+      margin-top: 10px;
+      background-color: #28a745;
+    }
+
+    #printBtn:hover {
+      background-color: #218838;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #007bff;
+      color: white;
+    }
+
+    #adminDashboard {
+      display: none;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+
+  <form id="facilitationFeeForm">
+    <fieldset>
+      <legend>Record Facilitation Fee for Event</legend>
+
+      <label for="sportEvent">Sport</label>
+      <select id="sportEvent" name="sportEvent" required>
+        <option value="" disabled selected>Select sport</option>
+        <option value="Swimming">Swimming</option>
+        <option value="Hockey">Hockey</option>
+        <option value="Football">Football</option>
+        <option value="Basketball">Basketball</option>
+      </select>
+      <div id="sportError" class="error"></div>
+
+      <label for="teamSize">Number of Team Members</label>
+      <input type="number" id="teamSize" name="teamSize" min="1" required>
+      <div id="teamSizeError" class="error"></div>
+
+      <label for="patronName">Patron Name</label>
+      <input type="text" id="patronName" name="patronName" required>
+      <div id="patronNameError" class="error"></div>
+
+      <button type="submit">Calculate Fees</button>
+    </fieldset>
+
+    <div id="feeDisplay"></div>
+    <button type="button" id="printBtn" style="display:none;">🖨️ Print Summary</button>
+  </form>
+
+  <hr>
+
+  <!-- Admin Login Section -->
+  <div id="adminLoginSection">
+    <h2>Admin Login</h2>
+    <input type="password" id="adminPassword" placeholder="Enter admin password" />
+    <button onclick="verifyLogin()">Login as Admin</button>
+    <div id="loginError" class="error"></div>
+  </div>
+
+  <!-- Admin Dashboard -->
+  <div id="adminDashboard">
+    <h2>Submitted Records</h2>
+    <button onclick="logout()">🔒 Logout</button>
+    <button onclick="clearRecords()">🗑️ Clear All Records</button>
+    <table>
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Patron</th>
+          <th>Sport</th>
+          <th>Team</th>
+          <th>Total (KES)</th>
+        </tr>
+      </thead>
+      <tbody id="dashboardBody"></tbody>
+    </table>
+  </div>
+
+  <script>
+    const ratesPerSport = {
+      "Swimming": 800,
+      "Hockey": 1000,
+      "Football": 900,
+      "Basketball": 950
+    };
+
+    const ADMIN_PASSWORD = "admin123"; // Change this to a secure password
+
+    function formatKES(amount) {
+      return `KES ${amount.toLocaleString('en-KE', { minimumFractionDigits: 2 })}`;
+    }
+
+    function getDiscount(teamSize) {
+      if (teamSize >= 11) return 0.2;
+      if (teamSize >= 6) return 0.1;
+      return 0;
+    }
+
+    function validateForm(sport, teamSize, patronName) {
+      let isValid = true;
+
+      document.getElementById('sportError').textContent = '';
+      document.getElementById('teamSizeError').textContent = '';
+      document.getElementById('patronNameError').textContent = '';
+
+      if (!sport) {
+        document.getElementById('sportError').textContent = 'Please select a sport.';
+        isValid = false;
+      }
+
+      if (!teamSize || teamSize < 1) {
+        document.getElementById('teamSizeError').textContent = 'Please enter a valid team size.';
+        isValid = false;
+      }
+
+      if (!patronName.trim()) {
+        document.getElementById('patronNameError').textContent = 'Please enter the patron name.';
+        isValid = false;
+      }
+
+      return isValid;
+    }
+
+    document.getElementById('facilitationFeeForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const sport = document.getElementById('sportEvent').value;
+      const teamSize = parseInt(document.getElementById('teamSize').value);
+      const patronName = document.getElementById('patronName').value.trim();
+
+      if (!validateForm(sport, teamSize, patronName)) return;
+
+      const rate = ratesPerSport[sport];
+      const discountRate = getDiscount(teamSize);
+      const originalTotal = teamSize * rate;
+      const discountAmount = originalTotal * discountRate;
+      const finalTotal = originalTotal - discountAmount;
+
+      const feeDisplay = document.getElementById('feeDisplay');
+      feeDisplay.innerHTML = `
+        ✅ <strong>${patronName}</strong>, the fee for <strong>${sport}</strong> with <strong>${teamSize}</strong> team member(s) is:
+        <ul>
+          <li>Rate per member: ${formatKES(rate)}</li>
+          <li>Team size: ${teamSize}</li>
+          <li>Subtotal: ${formatKES(originalTotal)}</li>
+          <li>Discount (${discountRate * 100}%): -${formatKES(discountAmount)}</li>
+          <li><strong>Total Fee: ${formatKES(finalTotal)}</strong></li>
+        </ul>
+      `;
+      feeDisplay.style.display = 'block';
+      document.getElementById('printBtn').style.display = 'block';
+
+      // Send Email
+      sendEmail(sport, teamSize, patronName, rate, finalTotal);
+
+      // Store entry
+      let records = JSON.parse(localStorage.getItem('feeRecords')) || [];
+      records.push({
+        patronName,
+        sport,
+        teamSize,
+        rate,
+        discountRate,
+        total: finalTotal,
+        timestamp: new Date().toLocaleString()
+      });
+      localStorage.setItem('feeRecords', JSON.stringify(records));
+    });
+
+    document.getElementById('printBtn').addEventListener('click', function () {
+      const printContent = document.getElementById('feeDisplay').innerHTML;
+      const w = window.open('', '', 'width=600,height=600');
+      w.document.write('<html><head><title>Fee Summary</title></head><body>');
+      w.document.write(printContent);
+      w.document.write('</body></html>');
+      w.document.close();
+      w.print();
+    });
+
+    function sendEmail(sport, teamSize, patronName, rate, finalTotal) {
+      const subject = `Facilitation Fee Summary for ${patronName}`;
+      const body = `
+Hi ${patronName},
+
+Here is the summary of your facilitation fee:
+
+Sport: ${sport}
+Team Size: ${teamSize}
+Rate per Member: ${formatKES(rate)}
+Total Fee: ${formatKES(finalTotal)}
+
+Thank you,
+Your Sports Department
+      `.trim();
+
+      const mailtoLink = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.location.href = mailtoLink;
+    }
+
+    function verifyLogin() {
+      const enteredPassword = document.getElementById("adminPassword").value;
+      const error = document.getElementById("loginError");
+
+      if (enteredPassword === ADMIN_PASSWORD) {
+        error.textContent = "";
+        document.getElementById("adminLoginSection").style.display = "none";
+        document.getElementById("adminDashboard").style.display = "block";
+        showDashboard();
+      } else {
+        error.textContent = "Incorrect password.";
+      }
+    }
+
+    function logout() {
+      document.getElementById("adminDashboard").style.display = "none";
+      document.getElementById("adminLoginSection").style.display = "block";
+      document.getElementById("adminPassword").value = "";
+    }
+
+    function showDashboard() {
+      const dashboard = document.getElementById('adminDashboard');
+      const tbody = document.getElementById('dashboardBody');
+      tbody.innerHTML = '';
+
+      const records = JSON.parse(localStorage.getItem('feeRecords')) || [];
+
+      if (records.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5">No records found.</td></tr>`;
+      } else {
+        records.forEach(record => {
+          const row = `
+            <tr>
+              <td>${record.timestamp}</td>
+              <td>${record.patronName}</td>
+              <td>${record.sport}</td>
+              <td>${record.teamSize}</td>
+              <td>${formatKES(record.total)}</td>
+            </tr>
+          `;
+          tbody.innerHTML += row;
+        });
+      }
+    }
+
+    function clearRecords() {
+      if (confirm("Are you sure you want to delete all records?")) {
+        localStorage.removeItem("feeRecords");
+        showDashboard();
+      }
+    }
+  </script>
+
+</body>
+</html>

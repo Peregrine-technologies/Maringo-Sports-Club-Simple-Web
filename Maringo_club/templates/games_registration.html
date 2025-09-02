@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Games Registration</title>
+
+    <!-- Bootstrap CSS for a modern look -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <!-- Your custom styles -->
+    <style>
+        body {
+            background: #f0f2f5;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #007bff;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        fieldset {
+            border: 5px solid #ddd;
+            padding: 80px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        legend {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 6px;
+            border: 3px solid #ccc;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            font-size: 1.1rem;
+            padding: 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .alert {
+            margin-top: 20px;
+            font-size: 1rem;
+        }
+
+        .form-control::placeholder {
+            color: #888;
+        }
+
+        .form-control:focus::placeholder {
+            color: transparent;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group i {
+            position: absolute;
+            top: 12px;
+            left: 10px;
+            color: #007bff;
+            font-size: 18px;
+        }
+
+        .form-control {
+            padding-left: 30px;
+        }
+
+        .form-group select {
+            padding-left: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5 mb-5 p-4">
+    <form method="POST" action="{{ url_for('game_registration') }}">
+    <h1 class="mb-4 text-center text-primary">Games Registration</h1>
+
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="alert alert-success">
+                        {{ messages[0] }}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <fieldset class="mb-3">
+                <legend>1st field set</legend>
+                <div class="form-group">
+                    <label for="first-name">First Name</label>
+                    <input type="text" id="first-name" name="first_name" class="form-control" required placeholder="Enter your first name">
+                    <i class="fas fa-user"></i>
+                </div>
+
+                <div class="form-group">
+                    <label for="last-name">Last Name</label>
+                    <input type="text" id="last-name" name="last_name" class="form-control" required placeholder="Enter your last name">
+                    <i class="fas fa-user"></i>
+                </div>
+            </fieldset>
+
+            <fieldset class="mb-3">
+                <legend>2nd field set</legend>
+                <label for="dob">Date of Birth</label>
+                <input type="date" id="dob" name="dob" class="form-control" required>
+            </fieldset>
+
+            <fieldset class="mb-3">
+                <legend>Select Your Favorite Sport</legend>
+                <label for="sport">Sport:</label>
+                <input list="sports" name="sport" id="sport" class="form-control" title="Start typing your favorite sport">
+                <datalist id="sports">
+                    <option value="Soccer">
+                    <option value="Basketball">
+                    <option value="Cricket">
+                    <option value="Tennis">
+                    <option value="Rugby">
+                    <option value="Baseball">
+                    <option value="Golf">
+                    <option value="Badminton">
+                    <option value="Table Tennis">
+                    <option value="Volleyball">
+                    <option value="Swimming">
+                    <option value="Cycling">
+                    <option value="Boxing">
+                    <option value="Athletics">
+                    <option value="Hockey">
+                    <option value="Gymnastics">
+                    <option value="Wrestling">
+                    <option value="MMA">
+                    <option value="Ice Hockey">
+                    <option value="Skiing">
+                    <option value="Surfing">
+                    <option value="Racing">
+                    <option value="Archery">
+                    <option value="Handball">
+                    <option value="Lacrosse">
+                    <option value="Fencing">
+                    <option value="Equestrian">
+                    <option value="Skateboarding">
+                    <option value="Rock Climbing">
+                    <option value="Snowboarding">
+                    <!-- More sports can be added here -->
+                </datalist>
+            </fieldset>
+
+            <fieldset class="mb-3">
+                <legend>Select Your Gender</legend>
+                <label for="gender">Gender:</label>
+                <select name="gender" id="gender" class="form-select" required>
+                    <option value="" disabled selected>Select one</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Prefer not to say">Prefer not to say</option>
+                </select>
+            </fieldset>
+
+            <fieldset class="mb-3">
+                <legend>5th field set</legend>
+                <label for="kin">Next of Kin</label>
+                <input type="text" id="kin" name="kin" class="form-control" required placeholder="Enter your next of kin">
+            </fieldset>
+
+            <fieldset class="mb-3">
+                <legend>6th field set</legend>
+                <label for="contact">Contact Email</label>
+                <div class="form-group">
+                    <input type="email" id="contact" name="email" class="form-control" required placeholder="example@domain.com">
+                    <i class="fas fa-envelope"></i>
+                </div>
+
+                <label for="phone" class="mt-2">Phone Number</label>
+                <input type="tel" id="phone" name="phone" class="form-control" placeholder="e.g., +2547xxxxxxx">
+            </fieldset>
+
+            <fieldset class="mb-3">
+                <legend>Select Your County</legend>
+                <label for="county">County:</label>
+                <input list="kenya-counties" name="county" id="county" class="form-control" placeholder="Start typing..." required>
+                <datalist id="kenya-counties">
+                    <option value="Bomet">
+                    <option value="Bungoma">
+                    <option value="Busia">
+                    <option value="Elgeyo Marakwet">
+                    <option value="Embu">
+                    <option value="Garissa">
+                    <option value="Homa Bay">
+                    <option value="Isiolo">
+                    <option value="Kajiado">
+                    <option value="Kakamega">
+                    <option value="Kericho">
+                    <option value="Kiambu">
+                    <option value="Kilifi">
+                    <option value="Kirinyaga">
+                    <option value="Kisii">
+                    <option value="Kisumu">
+                    <option value="Kitui">
+                    <option value="Kwale">
+                    <option value="Laikipia">
+                    <option value="Lamu">
+                    <option value="Makueni">
+                    <option value="Mandera">
+                    <option value="Marsabit">
+                    <option value="Meru">
+                    <option value="Migori">
+                    <option value="Mombasa">
+                    <option value="Murang'a">
+                    <option value="Nairobi">
+                    <option value="Nakuru">
+                    <option value="Nandi">
+                    <option value="Narok">
+                    <option value="Nyamira">
+                    <option value="Nyandarua">
+                    <option value="Nyanza">
+                    <option value="Samburu">
+                    <option value="Siaya">
+                    <option value="Taita Taveta">
+                    <option value="Tana River">
+                    <option value="Tharaka Nithi">
+                    <option value="Trans Nzoia">
+                    <option value="Uasin Gishu">
+                    <option value="Vihiga">
+                    <option value="Wajir">
+                    <option value="West Pokot">
+                    <option value="Lamu">
+                    <!-- All 47 counties are included -->
+                </datalist>
+            </fieldset>
+
+            <fieldset class="mb-3">
+                <legend>8th field set</legend>
+                <label for="height">Height (cm)</label>
+                <input type="number" id="height" name="height" class="form-control" required>
+            </fieldset>
+
+            <fieldset class="mb-3">
+                <legend>9th field set</legend>
+                <label for="weight">Weight (kg)</label>
+                <input type="number" id="weight" name="weight" class="form-control" required>
+            </fieldset>
+
+            <fieldset class="mb-3">
+                <label for="special-needs">Special Needs (optional)</label>
+                <input type="text" id="special-needs" name="special_needs" class="form-control" placeholder="Enter any cases of special needs">
+            </fieldset>
+
+            <fieldset class="mb-4">
+                <legend>Enrolment Type</legend>
+                <label for="enrolment">I am enrolling as</label>
+                <input list="enrolment-types" name="enrolment" id="enrolment" class="form-control" required>
+                <datalist id="enrolment-types">
+                    <option value="Individual">
+                    <option value="School">
+                    <option value="College">
+                    <option value="Religious Organization">
+                </datalist>
+            </fieldset>
+
+            <fieldset>
+                <input type="submit" value="Register Games">
+            </fieldset>
+        </form>
+    </div>
+
+    <!-- Bootstrap JS (optional but useful for responsive behaviors) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

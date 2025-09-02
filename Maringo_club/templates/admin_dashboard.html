@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2 class="mb-4">Admin Dashboard</h2>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="alert alert-info">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <table class="table table-bordered table-hover">
+        <thead class="table-primary">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>DOB</th>
+                <th>Sport</th>
+                <th>Gender</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in registrations %}
+            <tr>
+                <td>{{ r.id }}</td>
+                <td>{{ r.first_name }} {{ r.last_name }}</td>
+                <td>{{ r.dob }}</td>
+                <td>{{ r.sport }}</td>
+                <td>{{ r.gender }}</td>
+                <td>{{ r.email }}</td>
+                <td>{{ r.phone }}</td>
+                <td>
+                    <a href="{{ url_for('edit_registration', id=r.id) }}" class="btn btn-sm btn-warning">Edit</a>
+                    <form method="POST" action="{{ url_for('delete_registration', id=r.id) }}" style="display:inline;" onsubmit="return confirm('Are you sure?');">
+                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

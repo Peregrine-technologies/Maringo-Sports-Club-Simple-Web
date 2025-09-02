@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Register - Maringo Sports Club</title>
+  <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+                  url('https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=1350&q=80')
+                  no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      max-width: 450px;
+      width: 90%;
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    label {
+      font-weight: bold;
+      color: #444;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin: 6px 0 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    input[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      background-color: #00796b;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #004d40;
+    }
+
+    input[type="checkbox"] {
+      margin-right: 5px;
+    }
+
+    p {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    a {
+      color: #00695c;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <form id="registerForm" method="POST" action="{{ url_for('register_user') }}">
+      <h1>Register</h1>
+
+      <div>
+        <label for="first_name">First Name</label>
+        <input type="text" name="first_name" id="first_name" placeholder="First Name" required>
+      </div>
+
+      <div>
+        <label for="last_name">Last Name</label>
+        <input type="text" name="last_name" id="last_name" placeholder="Last Name" required>
+      </div>
+
+      <div>
+        <label for="username">Username</label>
+        <input type="text" name="username" id="username" placeholder="Username" required>
+      </div>
+
+      <div>
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" placeholder="Email Address" required>
+      </div>
+
+      <div>
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" placeholder="Password" required>
+        <p>
+          <input type="checkbox" id="togglePassword">
+          <label for="togglePassword">Show password</label>
+        </p>
+      </div>
+
+      <div>
+        <label for="confirm_password">Confirm Password</label>
+        <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password" required>
+        <p>
+          <input type="checkbox" id="toggleConfirm">
+          <label for="toggleConfirm">Show confirm password</label>
+        </p>
+      </div>
+
+      <input type="submit" value="Register">
+
+      <p><a href="{{ url_for('login') }}">Already have an account? Login here</a></p>
+    </form>
+  </div>
+
+  <script>
+    // Toggle password visibility
+    document.getElementById('togglePassword').addEventListener('change', function () {
+      const password = document.getElementById('password');
+      password.type = this.checked ? 'text' : 'password';
+    });
+
+    document.getElementById('toggleConfirm').addEventListener('change', function () {
+      const confirmPassword = document.getElementById('confirm_password');
+      confirmPassword.type = this.checked ? 'text' : 'password';
+    });
+
+    // Validate matching passwords
+    document.getElementById('registerForm').addEventListener('submit', function (e) {
+      const pw = document.getElementById('password').value;
+      const cpw = document.getElementById('confirm_password').value;
+      if (pw !== cpw) {
+        e.preventDefault();
+        alert("Passwords do not match.");
+      }
+    });
+  </script>
+</body>
+</html>

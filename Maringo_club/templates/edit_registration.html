@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Registration</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        body {
+            background: linear-gradient(to right, #e0f7fa, #e0f2f1);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .form-container {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 30px 40px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-weight: 600;
+            color: #00796b;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #004d40;
+        }
+
+        .btn-primary {
+            background-color: #00796b;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #004d40;
+        }
+
+        .btn-secondary {
+            background-color: #b0bec5;
+            border: none;
+        }
+
+        .btn-secondary:hover {
+            background-color: #90a4ae;
+        }
+    </style>
+</head>
+<body>
+<div class="container py-5">
+    <div class="form-container mx-auto col-lg-10 col-xl-8">
+        <h2 class="text-center mb-4">Edit Registration</h2>
+
+        <form method="POST" class="row g-3">
+            {% for field in ['first_name', 'last_name', 'dob', 'sport', 'gender', 'kin', 'email', 'phone', 'county', 'height', 'weight', 'special_needs', 'enrolment_type'] %}
+                <div class="col-md-6">
+                    <label class="form-label">{{ field.replace('_', ' ').title() }}</label>
+                    <input
+                        type="{{ 'date' if field == 'dob' else 'text' }}"
+                        class="form-control"
+                        name="{{ 'enrolment' if field == 'enrolment_type' else field }}"
+                        value="{{ reg[field] }}">
+                </div>
+            {% endfor %}
+            <div class="col-12 text-center mt-4">
+                <button type="submit" class="btn btn-primary px-4 me-3">Update</button>
+                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary px-4">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
