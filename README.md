@@ -249,5 +249,3 @@ If you're facing other issues, feel free to open an issue in the GitHub reposito
 * Include badges like build status, test coverage, or dependencies for a more polished look at the top of the README.
 
 ---
-
-This version now has the **database name set to `your_database.db`**. Feel free to copy-paste this version into your `README.md`.
