@@ -240,12 +240,3 @@ If you encounter issues, here are some common problems and their solutions:
   Solution: Try running the application on a different port by changing the port setting in the `.env` file.
 
 If you're facing other issues, feel free to open an issue in the GitHub repository.
-
----
-
-### Notes:
-
-* You can also add any **CI/CD** tools if you're automating the build, test, and deployment pipelines (e.g., using GitHub Actions, CircleCI, etc.).
-* Include badges like build status, test coverage, or dependencies for a more polished look at the top of the README.
-
----
